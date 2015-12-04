@@ -2,7 +2,9 @@
     'use strict';
 
     angular.module('app', [
-        'ui.router'
+        'ui.router',
+        'btford.socket-io',
+        'app.core'
     ])
 
     .config(routeConfiguration);

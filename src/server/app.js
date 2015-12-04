@@ -15,9 +15,9 @@ var routes = require('./routes/index.js');
 var app = express();
 
 /** attach socket.io to the app */
-var io = require('socket.io')();
-app.io = io;
-require('./routes/sockets')(io);
+// var io = require('socket.io')();
+// app.io = io;
+// require('./routes/sockets')(io);
 
 
 // *** view engine *** //
