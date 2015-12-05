@@ -14,8 +14,9 @@
             socket.emit('message', $scope.messageToSend);
         };
 
-        $scope.$on('socket:message', function(ev, msg) {
-            $scope.messageReceived = msg;
+        $scope.$on('socket:message', function(ev, data) {
+            $scope.messageReceived = data.message;
+            $scope.questionReceived = data.question;
         });
     }
 })();
