@@ -1,35 +1,46 @@
 var io = require('socket.io')();
 var request = require('request-promise');
-var jService = 'http://jservice.io/api/random';
+var jService = {
+    random: 'http://jservice.io/api/random?count=',
+    category: 'http://jservice.io/api/category?id='
+};
 
 io.on('connection', function(socket) {
-    console.log('its happening!');
 
     socket.on('message', function(msg) {
         console.log('message received: ', msg);
         socket.emit('message', 'message received: ' + msg);
     });
 
+    /** getQuestions socket event */
     socket.on('getQuestions', function(options) {
-        if (!options || options.random) {
-            getGameQuestions({random: true})
+        var randomGame = !options || options.random;
+        if (randomGame) {
+            var opts = randomGame ? {random: true} : options;
+            getGameQuestions(opts)
             .then(function(questions) {
                 socket.emit('getQuestions', questions);
             });
         }
-    });
-
-    socket.on('disconnect', function() {
-        console.log('disconnected');
+        else {
+            getGameQuestions(options)
+            .then(function(data) {
+                socket.emit('getQuestions', data);
+            });
+        }
     });
 });
 
 function getGameQuestions(options) {
-    var url = jService;
+    var url;
 
     if (options.random) {
-        url += '?count=10';
+        url = jService.random + '10';
     }
+    else if (options.category) {
+        url = jService.category + options.category;
+    }
+
     return request(url)
     .then(function(response) {
         return JSON.parse(response);
