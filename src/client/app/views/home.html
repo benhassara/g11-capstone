@@ -10,10 +10,11 @@
                 {{messageReceived}}
             </div>
             <br>
-            <div class="">
-                <ul>
-                    <li>Question: {{questionReceived.question}}</li>
-                    <li>Answer: {{questionReceived.answer}}</li>
+            <div>
+                <button type="button" ng-click="getQuestions()">Get Questions</button>
+                <ul ng-repeat="question in questions">
+                    <li>Question: {{question.question}}</li>
+                    <li>Answer: {{question.answer}}</li>
                 </ul>
             </div>
         </div>

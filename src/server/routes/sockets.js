@@ -7,21 +7,15 @@ io.on('connection', function(socket) {
 
     socket.on('message', function(msg) {
         console.log('message received: ', msg);
-        request(jService)
-        .then(function(response) {
-            var question = JSON.parse(response)[0];
-            console.log(question);
-            var resData = {
-                message: msg,
-                question: question
-            };
-            socket.emit('message', resData);
-        });
+        socket.emit('message', 'message received: ' + msg);
     });
 
     socket.on('getQuestions', function(options) {
-        if (!options) {
-
+        if (!options || options.random) {
+            getGameQuestions({random: true})
+            .then(function(questions) {
+                socket.emit('getQuestions', questions);
+            });
         }
     });
 
@@ -30,11 +24,16 @@ io.on('connection', function(socket) {
     });
 });
 
-module.exports = io;
+function getGameQuestions(options) {
+    var url = jService;
 
-function getRandomQuestion() {
-    request(jService)
+    if (options.random) {
+        url += '?count=10';
+    }
+    return request(url)
     .then(function(response) {
         return JSON.parse(response);
     });
 }
+
+module.exports = io;

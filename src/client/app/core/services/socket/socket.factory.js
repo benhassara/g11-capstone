@@ -9,6 +9,7 @@
     function socketFn(socketFactory) {
         var socket = socketFactory();
         socket.forward('message');
+        socket.forward('getQuestions');
         return socket;
     }
 })();
