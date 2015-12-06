@@ -1,17 +1,30 @@
 process.env.NODE_ENV = 'test';
 
-var io = require('socket.io-client');
 var should = require('chai').should();
-var socketUrl = 'http://localhost:3000';
+var socketClient = require('socket.io-client');
 var options = {
     transports: ['websocket'],
     'force new connection': true
 };
+var app = require('../src/server/app');
+var server = require('http').createServer(app);
+var socketServer = require('../src/server/routes/sockets');
+var port = process.env.PORT || 4545;
+var socketUrl = 'http://localhost:' + port;
 
 describe('getQuestions', function() {
 
+    before(function() {
+        var listener = server.listen(port);
+        socketServer.attach(listener);
+    });
+
+    after(function() {
+        server.close();
+    });
+
     it('should return 10 random questions if no opts given', function(done) {
-        var client = io.connect(socketUrl, options);
+        var client = socketClient.connect(socketUrl, options);
 
         client.on('getQuestions', function(data) {
             data.should.have.length(10);
@@ -26,5 +39,7 @@ describe('getQuestions', function() {
         });
 
         client.emit('getQuestions');
+        // should do the same thing if random: true is passed
+        client.emit('getQuestions', {random: true});
     });
 });
