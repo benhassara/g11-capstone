@@ -7,10 +7,13 @@ var options = {
     'force new connection': true
 };
 var app = require('../src/server/app');
-var server = require('http').createServer(app);
 var socketServer = require('../src/server/routes/sockets');
 var port = process.env.PORT || 4545;
 var socketUrl = 'http://localhost:' + port;
+var http = require('http');
+var server = http.createServer(function(req, res) {
+    res.end('Connected');
+});
 
 describe('getQuestions', function() {
 
