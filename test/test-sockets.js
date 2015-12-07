@@ -71,4 +71,23 @@ describe('socket handlers', function() {
             client.emit('getQuestions', {category: 15214});
         });
     });
+
+    describe('getCategories event', function() {
+
+        it('should return 10 categories', function(done) {
+            var client = socketClient.connect(socketUrl, options);
+
+            client.on('getCategories', function(data) {
+                data.should.be.instanceof(Array);
+                // return 10 category choices
+                data.should.have.length(10);
+                data[0].should.be.a('object');
+                data[0].should.contain.all.keys(['id', 'title', 'clues_count']);
+                data[0].id.should.be.a('number');
+                data[0].title.should.be.a('string');
+                data[0].clues_count.should.be.a('number');
+                data[0].clues_count.should.equal('10');
+            });
+        });
+    });
 });
