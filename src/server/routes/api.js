@@ -1,8 +1,9 @@
 var express = require('express');
 var router = express.Router();
 
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+/** GET 10 random categories */
+router.get('/categories', function(req, res) {
+    // implement
 });
 
 module.exports = router;
